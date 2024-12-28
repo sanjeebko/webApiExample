@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client.Region;
 using NZWalks.API.AutoMapper;
+using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.Dto;
@@ -65,16 +67,20 @@ public class RegionsController : ControllerBase
     /// <param name="addRegionRequestDto">The details of the region to create.</param>
     /// <returns>An IActionResult containing the created region details.</returns>
     [HttpPost]
+    [ValidateModel]
     public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDto addRegionRequestDto)
     {
-        var regionDomainMode =  Mapper.Map<Region>(addRegionRequestDto);
          
-       var region = await RegionRepository.CreateAsync(regionDomainMode);
+            var regionDomainMode = Mapper.Map<Region>(addRegionRequestDto);
 
-        // map domain model back to regiondto
-        var regionDto =  Mapper.Map<RegionDto>(region);        
+            var region = await RegionRepository.CreateAsync(regionDomainMode);
 
-        return CreatedAtAction(nameof(GetRegion), new { id = regionDto.Id }, regionDto);
+            // map domain model back to regiondto
+            var regionDto = Mapper.Map<RegionDto>(region);
+
+            return CreatedAtAction(nameof(GetRegion), new { id = regionDto.Id }, regionDto);
+         
+
     }
 
     /// <summary>
@@ -85,19 +91,20 @@ public class RegionsController : ControllerBase
     /// <returns>An IActionResult containing the updated region details or a NotFound result if the region does not exist.</returns>
     [HttpPut()]
     [Route("{id:guid}")]
+    [ValidateModel]
     public async Task<IActionResult> UpdateRegion([FromRoute] Guid id,[FromBody] UpdateRegionRequestDto updateRegionRequestDto)
     {// map dto to domain model 
+         
+            var regionDomainMode = Mapper.Map<Region>(updateRegionRequestDto);
 
-        var regionDomainMode = Mapper.Map<Region>(updateRegionRequestDto);
-          
-        var region = await RegionRepository.UpdateAsync(id, regionDomainMode);
+            var region = await RegionRepository.UpdateAsync(id, regionDomainMode);
 
-        if (region is null)
-            return NotFound();
+            if (region is null)
+                return NotFound();
 
-        //convert region to dto
-        var regionDto = Mapper.Map<RegionDto>(region);         
-        return Ok(regionDto);
+            //convert region to dto
+            var regionDto = Mapper.Map<RegionDto>(region);
+            return Ok(regionDto);         
     }
 
     /// <summary>
