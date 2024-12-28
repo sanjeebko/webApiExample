@@ -1,0 +1,27 @@
+@NZWalks.API_HostAddress = http://localhost:5247
+
+GET {{NZWalks.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+
+###
+
+###regions
+
+GET {{NZWalks.API_HostAddress}}/api/Regions/
+Accept: application/json
+
+###
+GET {{NZWalks.API_HostAddress}}/api/Regions/123e4567-e89b-12d3-a456-426614174000
+Accept: application/json
+
+###
+PUT {{NZWalks.API_HostAddress}}/api/Region/123e4567-e89b-12d3-a456-426614174000
+Content-Type: application/json
+Accept: application/json
+
+ {
+  "code": "cod1",
+  "name": "name1",
+  "regionImageUrl": "regionurl1"
+}  
