@@ -66,3 +66,4 @@ stylecop.json
 # Ignore published outputs
 **/bin
 **/obj
+/NZWalks/user-secrets.json
